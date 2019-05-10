@@ -130,15 +130,16 @@ class ViewController: UIViewController {
             
             var first = true // this is the first line we are drawing
             var length: CGFloat = 256
+            let y: CGFloat = 50
             
             for _ in 0 ..< 256 {
                 ctx.cgContext.rotate(by: .pi / 2)
                 
                 if first {
-                    ctx.cgContext.move(to: CGPoint(x: length, y: 50))
+                    ctx.cgContext.move(to: CGPoint(x: length, y: y))
                     first = false
                 } else {
-                    ctx.cgContext.addLine(to: CGPoint(x: length, y: 50))
+                    ctx.cgContext.addLine(to: CGPoint(x: length, y: y))
                 }
                 
                 length *= 0.99
