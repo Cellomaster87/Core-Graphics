@@ -21,7 +21,7 @@ class ViewController: UIViewController {
     @IBAction func redrawTapped(_ sender: Any) {
         currentDrawType += 1
         
-        if currentDrawType > 5 {
+        if currentDrawType > 6 {
             currentDrawType = 0
         }
         
@@ -43,6 +43,9 @@ class ViewController: UIViewController {
             
         case 5:
             drawImagesAndText()
+            
+        case 6:
+            drawEmoji()
             
         default:
             break
@@ -171,6 +174,51 @@ class ViewController: UIViewController {
             
             let mouse = UIImage(named: "mouse")
             mouse?.draw(at: CGPoint(x: 300, y: 150))
+        }
+        
+        imageView.image = image
+    }
+    
+    func drawEmoji() {
+        let renderer = UIGraphicsImageRenderer(size: CGSize(width: 512, height: 512))
+        
+        let image = renderer.image { ctx in
+            ctx.cgContext.translateBy(x: 192, y: 192)
+            
+            // chosen emoji 😀
+            // Step 1: draw the contour
+            let ellipseSize: CGFloat = 128
+            let rectangle = CGRect(x: 0, y: 0, width: ellipseSize, height: ellipseSize)
+            
+            ctx.cgContext.setFillColor(UIColor.init(displayP3Red: 248 / 255, green: 213 / 255, blue: 84 / 255, alpha: 1).cgColor)
+            
+            ctx.cgContext.addEllipse(in: rectangle)
+            ctx.cgContext.drawPath(using: .fillStroke)
+            
+            // Step 2: create two rectangles to hold the eyes ellipses
+            let eyesY: CGFloat = ellipseSize / 4
+            let eyesWidth: CGFloat = 10
+            let eyesHeight: CGFloat = 20
+            let eyesRectangleLeft = CGRect(x: (ellipseSize / 2) - (15 + eyesWidth), y: eyesY, width: eyesWidth, height: eyesHeight)
+            let eyesRectangleRight = CGRect(x: (ellipseSize / 2) + 15, y: eyesY, width: 10, height: 20)
+            
+            ctx.cgContext.setFillColor(UIColor.init(displayP3Red: 101 / 255, green: 56 / 255, blue: 18 / 255, alpha: 1).cgColor)
+            
+            ctx.cgContext.addEllipse(in: eyesRectangleLeft)
+            ctx.cgContext.addEllipse(in: eyesRectangleRight)
+            ctx.cgContext.drawPath(using: .fillStroke)
+            
+            // at this point we are here: 😶, not bad at all! Now how to get to the smile?
+            ctx.cgContext.beginPath()
+            
+            let smileX: CGFloat = 24
+            let smileY: CGFloat = 86
+            ctx.cgContext.move(to: CGPoint(x: smileX, y: smileY))
+            
+            ctx.cgContext.addQuadCurve(to: CGPoint(x: smileX + 80, y: smileY), control: CGPoint(x: 64, y: smileY + 45))
+            ctx.cgContext.closePath()
+            ctx.cgContext.setFillColor(UIColor.init(displayP3Red: 158/255, green: 106/255, blue: 37/155, alpha: 1).cgColor)
+            ctx.cgContext.drawPath(using: .fillStroke)
         }
         
         imageView.image = image
