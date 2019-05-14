@@ -21,7 +21,7 @@ class ViewController: UIViewController {
     @IBAction func redrawTapped(_ sender: Any) {
         currentDrawType += 1
         
-        if currentDrawType > 6 {
+        if currentDrawType > 7 {
             currentDrawType = 0
         }
         
@@ -46,6 +46,9 @@ class ViewController: UIViewController {
             
         case 6:
             drawEmoji()
+            
+        case 7:
+            drawText()
             
         default:
             break
@@ -222,6 +225,66 @@ class ViewController: UIViewController {
         }
         
         imageView.image = image
+    }
+    
+    func drawText() {
+        let renderer = UIGraphicsImageRenderer(size: CGSize(width: 512, height: 512))
+        
+        let image = renderer.image { ctx in
+            ctx.cgContext.translateBy(x: 138, y: 206) // draw from the center of the canvas
+            
+            let margin: CGFloat = 6
+            
+            // T
+            let widthT: CGFloat = 60
+            ctx.cgContext.move(to: CGPoint(x: margin, y: 0))
+            ctx.cgContext.addLine(to: CGPoint(x: widthT + margin, y: 0)) // draw the upper line of the T
+            
+            ctx.cgContext.move(to: CGPoint(x: margin + (widthT / 2), y: 0))
+            ctx.cgContext.addLine(to: CGPoint(x: margin + (widthT / 2), y: 100)) // draw the stem of the T
+            
+            // leave some space between T and W
+            let firstSpace: CGFloat = 10
+            let endXofT: CGFloat = margin + widthT
+            let wavesWidth: CGFloat = 17.5
+            let startOfW: CGFloat = endXofT + firstSpace
+            let wCentralHeight: CGFloat = 30
+            
+            // W
+            ctx.cgContext.move(to: CGPoint(x: startOfW, y: 0))
+            ctx.cgContext.addLine(to: CGPoint(x: startOfW + wavesWidth, y: 100))
+            ctx.cgContext.addLine(to: CGPoint(x: startOfW + (2 * wavesWidth), y: wCentralHeight))
+            ctx.cgContext.addLine(to: CGPoint(x: startOfW + (3 * wavesWidth), y: 100))
+            ctx.cgContext.addLine(to: CGPoint(x: startOfW + (4 * wavesWidth), y: 0))
+            let endXofW: CGFloat = startOfW + (wavesWidth * 4)
+            
+            // configure beginning of I
+            let secondSpace: CGFloat = 20
+            let startXofI: CGFloat = endXofW + secondSpace
+            
+            // I
+            ctx.cgContext.move(to: CGPoint(x: startXofI, y: 0))
+            ctx.cgContext.addLine(to: CGPoint(x: startXofI, y: 100))
+            let endXofI: CGFloat = startXofI
+            
+            // configure beginning of N
+            let thirdSpace: CGFloat = 20 // possibly = secondSpace, to verify
+            let startXofN: CGFloat = endXofI + thirdSpace
+            
+            // N
+            ctx.cgContext.move(to: CGPoint(x: startXofN, y: 100))
+            ctx.cgContext.addLine(to: CGPoint(x: startXofN, y: 0))
+            let widthN: CGFloat = 55
+            ctx.cgContext.addLine(to: CGPoint(x: startXofN + widthN, y: 100))
+            ctx.cgContext.addLine(to: CGPoint(x: startXofN + widthN, y: 0))
+
+//            ctx.cgContext.setLineWidth(<#T##width: CGFloat##CGFloat#>)
+            ctx.cgContext.setStrokeColor(UIColor.black.cgColor)
+            ctx.cgContext.strokePath()
+        }
+        
+        imageView.image = image
+        
     }
 }
 
