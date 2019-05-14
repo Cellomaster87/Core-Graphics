@@ -284,7 +284,6 @@ class ViewController: UIViewController {
         }
         
         imageView.image = image
-        
     }
 }
 
